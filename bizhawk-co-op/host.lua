@@ -19,29 +19,29 @@ local itemcount
 
 function host.start()
 	if (host.status == 'Host') then
-		if host.locked then
-			local roomstr, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/create' ..
-					'?user=' .. config.user ..
-					'&pass=' .. config.pass)
-			if (err == 200) then
-				host.locked = false
-				updateGUI()
-				printOutput('Room unlocked.')
-			else
-				printOutput('Error unlocking room [Code: ' .. (err or '') .. ']')
-			end
-		else
-			local roomstr, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/destroy' ..
-					'?user=' .. config.user ..
-					'&pass=' .. config.pass)
-			if (err == 200) then
-				host.locked = true
-				updateGUI()
-				printOutput('Room locked.')
-			else
-				printOutput('Error locking room [Code: ' .. (err or '') .. ']')
-			end
-		end
+		-- if host.locked then
+		-- 	local roomstr, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/create' ..
+		-- 			'?user=' .. config.user ..
+		-- 			'&pass=' .. config.pass)
+		-- 	if (err == 200) then
+		-- 		host.locked = false
+		-- 		updateGUI()
+		-- 		printOutput('Room unlocked.')
+		-- 	else
+		-- 		printOutput('Error unlocking room [Code: ' .. (err or '') .. ']')
+		-- 	end
+		-- else
+		-- 	local roomstr, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/destroy' ..
+		-- 			'?user=' .. config.user ..
+		-- 			'&pass=' .. config.pass)
+		-- 	if (err == 200) then
+		-- 		host.locked = true
+		-- 		updateGUI()
+		-- 		printOutput('Room locked.')
+		-- 	else
+		-- 		printOutput('Error locking room [Code: ' .. (err or '') .. ']')
+		-- 	end
+		-- end
 
 		return
 	end
@@ -102,16 +102,16 @@ function host.start()
 	server:settimeout(0) -- non-blocking
 	printOutput("Created server on port " .. setport)
 
-	local roomstr, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/create' ..
-			'?user=' .. config.user ..
-			'&pass=' .. config.pass)
-	if (err == 200) then
-		printOutput('Room initialized.')
-	else
-		printOutput('Error creating room [Code: ' .. (err or '') .. ']')
-		host.close()
-		return false
-	end
+	-- local roomstr, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/create' ..
+	-- 		'?user=' .. config.user ..
+	-- 		'&pass=' .. config.pass)
+	-- if (err == 200) then
+	-- 	printOutput('Room initialized.')
+	-- else
+	-- 	printOutput('Error creating room [Code: ' .. (err or '') .. ']')
+	-- 	host.close()
+	-- 	return false
+	-- end
 
 	if (forms.gettext(formPlayerNumber) == '') then
 		forms.settext(formPlayerNumber, "1")
@@ -225,6 +225,8 @@ function host.join()
 		return
 	end
 
+	config.room ='(Custom IP)'
+
 	if not config.room or config.room == '' then
 		printOutput('Select a room to join.')
 		return false
@@ -261,21 +263,21 @@ function host.join()
 
 	coroutine.yield()
 
-	if not reconnect and config.room ~= '(Custom IP)' then
-		local err
-		config.hostname, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/join' ..
-				'?user=' .. config.room ..
-				'&pass=' .. config.pass)
-		if (err == 200) then
-			printOutput('Joining ' .. config.room)
-		else
-			printOutput('Error joining room [Code: ' .. (err or '') .. ']')
-			host.status = 'Idle'
-			host.locked = false
-			updateGUI()
-			return
-		end
-	end
+	-- if not reconnect and config.room ~= '(Custom IP)' then
+	-- 	local err
+	-- 	config.hostname, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/join' ..
+	-- 			'?user=' .. config.room ..
+	-- 			'&pass=' .. config.pass)
+	-- 	if (err == 200) then
+	-- 		printOutput('Joining ' .. config.room)
+	-- 	else
+	-- 		printOutput('Error joining room [Code: ' .. (err or '') .. ']')
+	-- 		host.status = 'Idle'
+	-- 		host.locked = false
+	-- 		updateGUI()
+	-- 		return
+	-- 	end
+	-- end
 
 	--use a non-blocking connection so that frames can continue to be drawn
 	--while attempting to connect. DNS lookups still occur synchronously, so
@@ -354,14 +356,14 @@ function host.close(reconnect)
 	if (server ~= nil) then
 		server:close()
 
-		local roomstr, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/destroy' ..
-				'?user=' .. config.user ..
-				'&pass=' .. config.pass)
-		if (err == 200) then
-			printOutput('Room closed.')
-		else
-			printOutput('Error closing room [Code: ' .. (err or '') .. ']')
-		end
+		-- local roomstr, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/destroy' ..
+		-- 		'?user=' .. config.user ..
+		-- 		'&pass=' .. config.pass)
+		-- if (err == 200) then
+		-- 	printOutput('Room closed.')
+		-- else
+		-- 	printOutput('Error closing room [Code: ' .. (err or '') .. ']')
+		-- end
 	end
 	server = nil
 
@@ -409,17 +411,18 @@ end
 
 --Get the list of Rooms
 function host.getRooms()
-	local roomstr, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/getrooms')
-	if (err == 200) then
-		if (roomstr == '') then
-			return false
-		else
-			return strsplit(roomstr, ',')
-		end
-	else
-		printOutput('Error fetching room list [Code ' .. (err or '') .. ']')
-		return false
-	end
+	-- local roomstr, err = http.request('https://us-central1-mzm-coop.cloudfunctions.net/getrooms')
+	-- if (err == 200) then
+	-- 	if (roomstr == '') then
+	-- 		return false
+	-- 	else
+	-- 		return strsplit(roomstr, ',')
+	-- 	end
+	-- else
+	-- 	printOutput('Error fetching room list [Code ' .. (err or '') .. ']')
+	-- 	return false
+	-- end
+  return false
 end
 
 function host.updateHostControls()
