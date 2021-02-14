@@ -1066,17 +1066,12 @@ function getRAM()
 			skip = true
 		end
 
-		if not config.ramconfig.skey then
-			-- Don't track any keys if keys are not split
-			if (item.flag == "skey" or item.flag == "gkey") then
-				skip = true
-			end
-		else
-			-- Don't track small keys in generic, or generic keys in standard
-			if (generickeys and item.flag == "skey") or
-			(not generickeys and item.flag == "gkey") then
-				skip = true
-			end
+		if generickeys and item.flag == "skey" then
+			skip = true
+		end
+
+		if not generickeys and item.flag == "gkey" then
+			skip = true
 		end
 
 		if not skip then
@@ -1505,7 +1500,6 @@ function lttp_ram.processMessage(their_user, message)
 	if message["i"] then
 		splitItems = message["i"]
 		message["i"] = nil
-		removeItems()
 
 		local playerlist = {}
 		playercount = 0
