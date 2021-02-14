@@ -589,6 +589,59 @@ ramItems = {
 	[0xF389] = {flag="skey", name="Ganon's Tower Key", type="delta", receiveFunc=recieveKey},
 }
 
+for i=0,295 do
+	ramItems[0xF000 + i*2] = {
+		name = {
+			[4] = "Room " .. i .. " chest #0",
+			[5] = "Room " .. i .. " chest #1",
+			[6] = "Room " .. i .. " chest #2",
+			[7] = "Room " .. i .. " chest #3",
+			},
+		type = "bit"
+	}
+
+	ramItems[0xF000 + i*2 + 1] = {
+		name = {
+			[0] = "Room " .. i .. " chest #5 / rupee tile",
+			[1] = "Room " .. i .. " chest #6 / key / item",
+			[2] = "Room " .. i .. " key / item",
+			[3] = "Room " .. i .. " boss dead",
+			[4] = "Room " .. i .. " door #0",
+			[5] = "Room " .. i .. " door #1",
+			[6] = "Room " .. i .. " door #2",
+			[7] = "Room " .. i .. " door #3",
+			},
+		type = "bit"
+	}
+end
+
+for i=0,127 do
+	ramItems[0xF280 + i] = {
+		name = {
+			[0] = "Area " .. i .. " event 0",
+						"Area " .. i .. " event 1",
+						"Area " .. i .. " event 2",
+						"Area " .. i .. " event 3",
+						"Area " .. i .. " event 4",
+						"Area " .. i .. " event 5",
+						"Area " .. i .. " event 6",
+						"Area " .. i .. " event 7"
+			},
+		type = "bit"
+	}
+end
+
+ramItems[0xF3C9] = {
+	name = {
+		[0] = "Hobo gave bottle",
+		[1] = "Vendor gave bottle",
+		[3] = "Flute boy became tree",
+		[4] = "Thief's chest opened",
+		[5] = "Smith saved",
+		[7] = "Smiths have your sword"
+		},
+	type = "bit"
+}
 
 local function getBossMaxHP(boss) 
 	-- Ideal multiplier = n * (2 ^ (2 - 1))
